@@ -44,7 +44,7 @@ You are expected to see the web page below:
 ## Benchmark <a name="benchmark"></a>
 Our *V*\*Bench is available [here](https://huggingface.co/datasets/craigwu/vstar_bench). 
 The benchmark contains folders for different subtasks. Within each folder is a list of image files and annotation JSON files. The image and annotations files are paired according to the filename. The format of the annotation files is:
-```json
+```javascript
 {
   "target_object": [] // A list of target object names
   ,
