@@ -6,16 +6,12 @@
 ![Teaser](assets/teaser.png)
 
 
-This repo contains PyTorch model definitions, pre-trained weights and training/sampling code for our paper exploring 
-diffusion models with transformers (DiTs). You can find more visualizations on our [project page](https://www.wpeebles.com/DiT).
-
-
 ## Contents:
 1. [Getting Started](#start)
-4. [Demo](#models)
-5. [Benchmark](#todos)
-6. [Evaluation](#models)
-7. [Training](#todos)
+4. [Demo](#demo)
+5. [Benchmark](#benchmark)
+6. [Evaluation](#evaluation)
+7. [Training](#training)
 10. [License](#license)
 11. [Citation](#citation)
 
@@ -31,21 +27,21 @@ pip install flash-attn --no-build-isolation
 
 ### Pre-trained Model
 
-The vqa llm in our Seal framework can be downloaded [here](https://huggingface.co/craigwu/seal_vqa_7b).  
-The visual search model in our seal framework can be downloaded [here](https://huggingface.co/craigwu/seal_vsm_7b).
+The VQA LLM can be downloaded [here](https://huggingface.co/craigwu/seal_vqa_7b).  
+The visual search model can be downloaded [here](https://huggingface.co/craigwu/seal_vsm_7b).
 
 ### Training Dataset
 
-The alignment stage of the vqa llm needs 
+The alignment stage of the VQA LLM uses the 558K subset of the LAION-CC-SBU dataset used by LLaVA which can be downloaded [here](https://huggingface.co/datasets/liuhaotian/LLaVA-Pretrain).
 
-The instruction tuning stage requires the of our 
+The instruction tuning stage requires several instruction tuning subsets which can be found [here](https://huggingface.co/datasets/craigwu/seal_vqa_data).
 
-## Demo
+## Demo <a name="demo"></a>
 You can launch a local Gradio demo after the installation by running `python app.py`. Note that the pre-trained model weights will be automatically downloaded if you have not downloaded them before.
 
 You are expected to see the web page below:
 
-## Benchmark
+## Benchmark <a name="benchmark"></a>
 Our *V*\*Bench is available [here](https://huggingface.co/datasets/craigwu/vstar_bench). 
 The benchmark contains folders for different subtasks. Within each folder is a list of image files and annotation JSON files. The image and annotations files are paired according to the filename. The format of the annotation files is:
 ```json
@@ -57,3 +53,11 @@ The benchmark contains folders for different subtasks. Within each folder is a l
   "question": "",
   "options": [] // A list of options, the first one is the correct option by default
 }
+```
+## Evaluation <a name="evaluation"></a>
+
+## Training <a name="training"></a>
+
+## License <a name="license"></a>
+
+## Citation <a name="citation"></a>
