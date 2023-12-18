@@ -36,6 +36,16 @@ The alignment stage of the VQA LLM uses the 558K subset of the LAION-CC-SBU data
 
 The instruction tuning stage requires several instruction tuning subsets which can be found [here](https://huggingface.co/datasets/craigwu/seal_vqa_data).
 
+The instruction tuning data requires images from [COCO-2014](http://images.cocodataset.org/zips/train2014.zip), [COCO-2017](http://images.cocodataset.org/zips/train2017.zip), and [GQA](https://downloads.cs.stanford.edu/nlp/data/gqa/images.zip). After downloading them, organize the data following the structure below
+```
+├── coco2014
+│   └── train2014
+├── coco2017
+│   └── train2017
+└── gqa
+     └── images
+```
+
 ## Demo <a name="demo"></a>
 You can launch a local Gradio demo after the installation by running `python app.py`. Note that the pre-trained model weights will be automatically downloaded if you have not downloaded them before.
 
