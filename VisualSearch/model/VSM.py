@@ -67,14 +67,13 @@ class VSMMetaModel:
 		if not hasattr(self.config, "train_mask_decoder"):
 			self.config.train_mask_decoder = kwargs["train_mask_decoder"]
 			self.config.out_dim = kwargs["out_dim"]
-			self.vision_pretrained = kwargs.get("vision_pretrained", None)
 		else:
-			self.vision_pretrained = kwargs.get("vision_pretrained", None)
-			self.initialize_lisa_modules(self.config)
+			is_eval = kwargs.get('is_eval', False)
+			self.initialize_lisa_modules(self.config, is_eval)
 
-	def initialize_lisa_modules(self, config):
+	def initialize_lisa_modules(self, config, is_eval=False):
 		# OWL-ViT
-		self.owlvit = OwlViT(1)
+		self.owlvit = OwlViT(1, is_eval)
 		self.owlvit.train()
 		for param in self.owlvit.parameters():
 			param.requires_grad = True

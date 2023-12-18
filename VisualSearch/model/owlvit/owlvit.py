@@ -5,7 +5,7 @@ import numpy as np
 import math
 from typing import Any, Dict, Optional, Tuple, Union
 
-from transformers import OwlViTForObjectDetection
+from transformers import OwlViTForObjectDetection, OwlViTConfig
 
 from .util import box_ops
 from .util.misc import (nested_tensor_from_tensor_list,
@@ -18,9 +18,13 @@ from .matcher import HungarianMatcher
 import copy
 
 class OwlViT(nn.Module):
-    def __init__(self, num_classes):
+    def __init__(self, num_classes, is_eval=False):
         super().__init__()
-        model_owlViT = OwlViTForObjectDetection.from_pretrained("google/owlvit-base-patch16")
+        if is_eval:
+            owlViT_config = OwlViTConfig.from_pretrained("google/owlvit-base-patch16")
+            model_owlViT = OwlViTForObjectDetection(owlViT_config)
+        else:
+            model_owlViT = OwlViTForObjectDetection.from_pretrained("google/owlvit-base-patch16")
         self.vision_model = model_owlViT.owlvit.vision_model
         self.class_head = model_owlViT.class_head
         self.box_head = model_owlViT.box_head
