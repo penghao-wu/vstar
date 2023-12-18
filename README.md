@@ -8,12 +8,12 @@
 
 ## Contents:
 1. [Getting Started](#start)
-4. [Demo](#demo)
-5. [Benchmark](#benchmark)
-6. [Evaluation](#evaluation)
-7. [Training](#training)
-10. [License](#license)
-11. [Citation](#citation)
+2. [Demo](#demo)
+3. [Benchmark](#benchmark)
+4. [Evaluation](#evaluation)
+5. [Training](#training)
+6. [Citation](#citation)
+7. [Acknowledgement](#acknowledgement)
 
 ## Getting Started <a name="start"></a>
 
@@ -41,6 +41,8 @@ You can launch a local Gradio demo after the installation by running `python app
 
 You are expected to see the web page below:
 
+![demo](assets/demo.png)
+
 ## Benchmark <a name="benchmark"></a>
 Our *V*\*Bench is available [here](https://huggingface.co/datasets/craigwu/vstar_bench). 
 The benchmark contains folders for different subtasks. Within each folder is a list of image files and annotation JSON files. The image and annotations files are paired according to the filename. The format of the annotation files is:
@@ -56,8 +58,43 @@ The benchmark contains folders for different subtasks. Within each folder is a l
 ```
 ## Evaluation <a name="evaluation"></a>
 
+To evaluate our model on the *V*\*Bench benchmark, run
+```
+python vstar_bench_eval.py --benchmark-folder PATH_TO_BENCHMARK_FOLDER
+```
+
+To evaluate our visual search mechanism on the annotated targets from the *V*\*Bench benchmark, run
+```
+python visual_search.py --benchmark-folder PATH_TO_BENCHMARK_FOLDER
+```
+
 ## Training <a name="training"></a>
 
-## License <a name="license"></a>
+The training of the VQA LLM model includes two stages.
+
+For the pre-training stage, enter the LLaVA folder and run
+```
+sh pretrain.sh
+```
+
+For the instruction tuning stage, enter the LLaVA folder and run
+```
+sh finetune.sh
+```
+
+For the training data preparation and training procedures of our visual search model, please check this [doc](./VisualSearch/training.md).
 
 ## Citation <a name="citation"></a>
+Please consider citing our paper if you find this project helpful for your research:
+
+```bibtex
+@article{,
+  title={},
+  author={},
+  journal={},
+  year={2023}
+}
+```
+
+## Acknowledgement <a name="acknowledgement"></a>
+-  This work is built upon the [LLaVA](https://github.com/haotian-liu/LLaVA) and [LISA](https://github.com/dvlab-research/LISA). 
