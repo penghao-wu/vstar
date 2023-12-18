@@ -28,7 +28,7 @@ from VisualSearch.utils.utils import (DEFAULT_IM_END_TOKEN, DEFAULT_IM_START_TOK
 def parse_args(args):
 	parser = argparse.ArgumentParser(description="Visual Search Evaluation")
 	parser.add_argument("--version", default="craigwu/seal_vsm_7b")
-	parser.add_argument("--data_folder", default="vstar_bench", type=str)
+	parser.add_argument("--benchmark-folder", default="vstar_bench", type=str)
 	parser.add_argument("--visualization", action="store_true", default=False)
 	parser.add_argument("--output_path", default="", type=str)
 	parser.add_argument("--confidence_low", default=0.3, type=float)
@@ -521,13 +521,13 @@ def main(args):
 	args = parse_args(args)
 	vsm = VSM(args)
 
-	data_folder = args.data_folder
+	benchmark_folder = args.benchmark_folder
 
 	acc_list = []
 	search_path_length_list = []
 
 	for test_type in ['direct_attributes', 'relative_position']:
-		folder = os.path.join(data_folder, test_type)
+		folder = os.path.join(benchmark_folder, test_type)
 		output_folder = None
 		if args.visualization:
 			output_folder =  os.path.join(args.output_path, test_type)
