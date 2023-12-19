@@ -1,7 +1,7 @@
 import os
 import random
 import json
-
+from PIL import Image
 import cv2
 import numpy as np
 import torch
@@ -9,13 +9,13 @@ import torch.nn.functional as F
 from pycocotools import mask
 from transformers import CLIPImageProcessor
 
-from model.llava import conversation as conversation_lib
-from PIL import Image
+from VisualSearch.model.llava import conversation as conversation_lib
+
 
 from transformers import OwlViTProcessor
 
-from .utils import box_xyxy_to_cxcywh, expand2square
-from .utils import ANSWER_LIST, SHORT_QUESTION_LIST
+from VisualSearch.utils.utils import box_xyxy_to_cxcywh, expand2square
+from VisualSearch.utils.utils import ANSWER_LIST, SHORT_QUESTION_LIST
 
 
 class MixedGroundingDataset(torch.utils.data.Dataset):

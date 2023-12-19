@@ -3,28 +3,28 @@ import os
 import random
 from PIL import Image
 import cv2
+cv2.setNumThreads(1)
 import numpy as np
 import torch
 import torch.nn.functional as F
 from pycocotools import mask
 from transformers import CLIPImageProcessor
-
-from ..model.llava import conversation as conversation_lib
-from ..model.llava.constants import (DEFAULT_IMAGE_TOKEN, IGNORE_INDEX,
-								   IMAGE_TOKEN_INDEX)
-from ..model.llava.mm_utils import tokenizer_image_token
-
-from .data_processing import get_mask_from_json
-from .refer import REFER
-from .refer_seg_dataset import ReferSegDataset
-from .general_segdet_dataset import SegDetDataset
-from .mixed_grounding_dataset import MixedGroundingDataset
-from .utils import (DEFAULT_IM_END_TOKEN, DEFAULT_IM_START_TOKEN,
-					DEFAULT_IMAGE_TOKEN)
-from .utils import box_xyxy_to_cxcywh, expand2square
-from .vqa_dataset import VQADataset
-
 from transformers import OwlViTProcessor
+
+from VisualSearch.model.llava import conversation as conversation_lib
+from VisualSearch.model.llava.constants import (DEFAULT_IMAGE_TOKEN, IGNORE_INDEX,
+								   IMAGE_TOKEN_INDEX)
+from VisualSearch.model.llava.mm_utils import tokenizer_image_token
+
+from VisualSearch.utils.data_processing import get_mask_from_json
+from VisualSearch.utils.refer import REFER
+from VisualSearch.utils.refer_seg_dataset import ReferSegDataset
+from VisualSearch.utils.general_segdet_dataset import SegDetDataset
+from VisualSearch.utils.mixed_grounding_dataset import MixedGroundingDataset
+from VisualSearch.utils.vqa_dataset import VQADataset
+from VisualSearch.utils.utils import (DEFAULT_IM_END_TOKEN, DEFAULT_IM_START_TOKEN,
+					DEFAULT_IMAGE_TOKEN)
+from VisualSearch.utils.utils import box_xyxy_to_cxcywh, expand2square
 
 
 def collate_fn(
@@ -193,7 +193,6 @@ class HybridDataset(torch.utils.data.Dataset):
 		vision_tower,
 		samples_per_epoch=500 * 8 * 2 * 10,
 		precision: str = "fp32",
-		image_size: int = 224,
 		num_classes_per_sample: int = 3,
 		exclude_val=False,
 		dataset="general_segdet||refer_seg||vqa||reason_seg",
@@ -203,18 +202,15 @@ class HybridDataset(torch.utils.data.Dataset):
 		refer_seg_data="refclef||refcoco||refcoco+||refcocog",
 		vqa_data="possible_locations_conv_86k||llava_instruct_80k",
 		vqa_sample_rate=[2,1],
-		explanatory=0.1,
 	):
 		self.exclude_val = exclude_val
 		self.dataset = dataset
 		self.samples_per_epoch = samples_per_epoch
-		self.explanatory = explanatory
 		self.num_classes_per_sample = num_classes_per_sample
 		sample_rate = np.array(sample_rate)
 		self.sample_rate = sample_rate / sample_rate.sum()
 
 		self.base_dir = base_dir
-		self.image_size = image_size
 		self.tokenizer = tokenizer
 		self.precision = precision
 
@@ -298,7 +294,6 @@ class ValDataset(torch.utils.data.Dataset):
 		tokenizer,
 		vision_tower,
 		val_dataset,
-		image_size=1024,
 	):
 		self.base_dir = base_dir
 		splits = val_dataset.split("|")
@@ -345,7 +340,6 @@ class ValDataset(torch.utils.data.Dataset):
 			self.data_type = "refer_seg"
 
 		self.ds = ds
-		self.image_size = image_size
 		self.tokenizer = tokenizer
 		self.transform = OwlViTProcessor.from_pretrained("google/owlvit-base-patch16")
 		self.clip_image_processor = CLIPImageProcessor.from_pretrained(vision_tower)

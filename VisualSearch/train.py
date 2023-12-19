@@ -12,10 +12,10 @@ import transformers
 from peft import LoraConfig, get_peft_model
 from torch.utils.tensorboard import SummaryWriter
 
-from .model.VSM import VSMForCausalLM
-from .model.llava import conversation as conversation_lib
-from .utils.dataset import HybridDataset, ValDataset, ValSearchDataset, collate_fn
-from .utils.utils import (DEFAULT_IM_END_TOKEN, DEFAULT_IM_START_TOKEN,
+from VisualSearch.model.VSM import VSMForCausalLM
+from VisualSearch.model.llava import conversation as conversation_lib
+from VisualSearch.utils.dataset import HybridDataset, ValDataset, collate_fn
+from VisualSearch.utils.utils import (DEFAULT_IM_END_TOKEN, DEFAULT_IM_START_TOKEN,
                          AverageMeter, ProgressMeter, Summary, dict_to_cuda,
                          intersectionAndUnionGPU)
 
@@ -39,17 +39,16 @@ def parse_args(args):
     )
     parser.add_argument("--load_in_8bit", action="store_true", default=False)
     parser.add_argument("--load_in_4bit", action="store_true", default=False)
-
     parser.add_argument(
         "--dataset", default="general_segdet||refer_seg||mixed_grounding||vqa", type=str
     )
     parser.add_argument("--sample_rates", default="15,4,4,15", type=str)
     parser.add_argument(
-        "--general_segdet",
+        "--general_segdet_data",
         default="objects365||cocostuff||paco_lvis",
         type=str,
     )
-    parser.add_argument("--general_segdet_sample_rates", default="2,1", type=str)
+    parser.add_argument("--general_segdet_sample_rates", default="2,1,1", type=str)
     parser.add_argument(
         "--refer_seg_data", default="refclef||refcoco||refcoco+||refcocog", type=str
     )
@@ -82,7 +81,7 @@ def parse_args(args):
     parser.add_argument("--explanatory", default=0.1, type=float)
     parser.add_argument("--beta1", default=0.9, type=float)
     parser.add_argument("--beta2", default=0.95, type=float)
-    parser.add_argument("--num_classes_per_sample", default=2, type=int)
+    parser.add_argument("--num_classes_per_sample", default=3, type=int)
     parser.add_argument("--exclude_val", action="store_true", default=False)
     parser.add_argument("--no_eval", action="store_true", default=False)
     parser.add_argument("--out_dim", default=512, type=int)
@@ -140,7 +139,7 @@ def main(args):
     )
     tokenizer.pad_token = tokenizer.unk_token
     num_added_tokens = tokenizer.add_tokens("[LOC]")
-    args.seg_token_idx = tokenizer("[LOC]", add_special_tokens=False).input_ids[0]
+    args.loc_token_idx = tokenizer("[LOC]", add_special_tokens=False).input_ids[0]
 
     if args.use_mm_start_end:
         tokenizer.add_tokens(
@@ -154,8 +153,7 @@ def main(args):
         "dice_loss_weight": args.dice_loss_weight,
         "bce_loss_weight": args.bce_loss_weight,
         "det_loss_weight" : args.det_loss_weight,
-        "seg_token_idx": args.seg_token_idx,
-        "vision_pretrained": args.vision_pretrained,
+        "loc_token_idx": args.loc_token_idx,
         "vision_tower": args.vision_tower,
         "use_mm_start_end": args.use_mm_start_end,
     }
@@ -259,42 +257,27 @@ def main(args):
         * args.steps_per_epoch
         * world_size,
         precision=args.precision,
-        image_size=args.image_size,
         num_classes_per_sample=args.num_classes_per_sample,
         exclude_val=args.exclude_val,
         dataset=args.dataset,
         sample_rate=[float(x) for x in args.sample_rates.split(",")],
-        sem_seg_data=args.sem_seg_data,
+        general_segdet_data=args.general_segdet_data,
+        general_segdet_sample_rate=[float(x) for x in args.general_segdet_sample_rates.split(",")],
         refer_seg_data=args.refer_seg_data,
         vqa_data=args.vqa_data,
-        reason_seg_data=args.reason_seg_data,
-        explanatory=args.explanatory,
+        vqa_sample_rate=[float(x) for x in args.vqa_sample_rates.split(",")],
     )
 
-    if args.no_eval == False or args.eval_only:
+    if args.no_eval == False:
         val_dataset = ValDataset(
             args.dataset_dir,
             tokenizer,
             args.vision_tower,
             args.val_dataset,
-            args.image_size,
         )
-        val_search_dataset = ValSearchDataset(
-            args.dataset_dir,
-            tokenizer,
-            args.vision_tower,
-            args.val_dataset,
-            args.image_size,)
         print(
             f"Training with {len(train_dataset)} examples and validating with {len(val_dataset)} examples."
         )
-    else:
-        val_dataset = None
-        print(f"Training with {len(train_dataset)} examples.")
-
-    if args.eval_only:
-        state_dict = torch.load(args.weight, map_location="cpu")
-        model.load_state_dict(state_dict, strict=True)
 
     ds_config = {
         "train_micro_batch_size_per_gpu": args.batch_size,
@@ -357,9 +340,9 @@ def main(args):
         load_path, client_state = model_engine.load_checkpoint(args.resume)
         with open(os.path.join(args.resume, "latest"), "r") as f:
             ckpt_dir = f.readlines()[0].strip()
-        # args.start_epoch = (
-        #     int(ckpt_dir.replace("global_step", "")) // args.steps_per_epoch
-        # )
+        args.start_epoch = (
+            int(ckpt_dir.replace("global_step", "")) // args.steps_per_epoch
+        )
         print(
             "resume training from {}, start from epoch {}".format(
                 args.resume, args.start_epoch
@@ -376,7 +359,6 @@ def main(args):
             val_dataset,
             batch_size=args.val_batch_size,
             shuffle=False,
-            num_workers=args.workers,
             pin_memory=False,
             sampler=val_sampler,
             collate_fn=partial(
@@ -388,28 +370,6 @@ def main(args):
             ),
         )
 
-        val_search_sampler = torch.utils.data.distributed.DistributedSampler(
-            val_search_dataset, shuffle=False, drop_last=False
-        )
-        val_search_loader = torch.utils.data.DataLoader(
-            val_search_dataset,
-            batch_size=args.val_batch_size,
-            shuffle=False,
-            num_workers=args.workers,
-            pin_memory=False,
-            sampler=val_search_sampler,
-            collate_fn=partial(
-                collate_fn,
-                tokenizer=tokenizer,
-                conv_type=args.conv_type,
-                use_mm_start_end=args.use_mm_start_end,
-                local_rank=args.local_rank,
-            ),
-        )
-
-    if args.eval_only:
-        giou, ciou, det_acc = validate(val_loader, model_engine, 0, writer, args)
-        exit()
 
     train_iter = iter(train_loader)
     best_score, cur_ciou, cur_giou = 0.0, 0.0, 0.0

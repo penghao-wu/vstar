@@ -4,15 +4,16 @@ import random
 import copy
 from PIL import Image
 import cv2
+import numpy as np
 import torch
 import torch.nn.functional as F
 from transformers import CLIPImageProcessor
-import numpy as np
-
-from ..model.llava import conversation as conversation_lib
 from transformers import OwlViTProcessor
-from .utils import box_xyxy_to_cxcywh, expand2square
-from .utils import DEFAULT_IMAGE_TOKEN
+
+
+from VisualSearch.model.llava import conversation as conversation_lib
+from VisualSearch.utils.utils import box_xyxy_to_cxcywh, expand2square
+from VisualSearch.utils.utils import DEFAULT_IMAGE_TOKEN
 
 
 def preprocess_multimodal(source, mm_use_im_start_end):
@@ -43,7 +44,6 @@ class VQADataset(torch.utils.data.Dataset):
         vision_tower,
         samples_per_epoch=500 * 8 * 2 * 10,
         precision: str = "fp32",
-        image_size: int = 224,
         num_classes_per_sample: int = 3,
         exclude_val=False,
         vqa_data="possible_locations_conv_86k||llava_instruct_150k",
@@ -54,7 +54,6 @@ class VQADataset(torch.utils.data.Dataset):
         self.num_classes_per_sample = num_classes_per_sample
 
         self.base_image_dir = base_image_dir
-        self.image_size = image_size
         self.tokenizer = tokenizer
         self.precision = precision
         self.transform = OwlViTProcessor.from_pretrained("google/owlvit-base-patch16")

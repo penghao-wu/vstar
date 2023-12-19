@@ -10,21 +10,23 @@ import torch.nn.functional as F
 
 from pycocotools.coco import COCO
 from transformers import CLIPImageProcessor
-
-from ..model.llava import conversation as conversation_lib
 from transformers import OwlViTProcessor
-from .utils import box_xyxy_to_cxcywh, expand2square
-from .utils import ANSWER_LIST, SHORT_QUESTION_LIST
 
+from VisualSearch.model.llava import conversation as conversation_lib
+
+from VisualSearch.utils.utils import box_xyxy_to_cxcywh, expand2square
+from VisualSearch.utils.utils import ANSWER_LIST, SHORT_QUESTION_LIST
+
+parent_dir = os.path.dirname(os.path.abspath(__file__))
 
 def init_objects365(base_dir):
     objects365_classes = []
-    with open("objects365_classes.txt") as f:
+    with open(os.path.join(parent_dir, "objects365_classes.txt")) as f:
         for line in f.readlines():
             objects365_classes.append(line.strip().split(": ")[-1])
     objects365_classes = np.array(objects365_classes)
 
-    with open(os.path.join(base_dir, "image2bboxes.json")) as f:
+    with open(os.path.join(base_dir, "object365", "image2bboxes.json")) as f:
         image2bboxes = json.load(f)
 
     objects365_images = list(image2bboxes.keys())
@@ -43,7 +45,7 @@ def init_objects365(base_dir):
 
 def init_cocostuff(base_dir):
     cocostuff_classes = []
-    with open("cocostuff_classes.txt") as f:
+    with open(os.path.join(parent_dir, "cocostuff_classes.txt")) as f:
         for line in f.readlines()[1:]:
             cocostuff_classes.append(line.strip().split(": ")[-1])
     cocostuff_classes = np.array(cocostuff_classes)
@@ -57,7 +59,7 @@ def init_cocostuff(base_dir):
         x.replace(".png", ".jpg").replace("cocostuff", "coco2017") for x in cocostuff_labels
     ]
 
-    with open("cocostuff_image2bboxes.json") as f:
+    with open(os.path.join(base_dir, "cocostuff", "annotations", "image2bboxes.json")) as f:
         image2bboxes = json.load(f)
 
     cocostuff_bboxes = []

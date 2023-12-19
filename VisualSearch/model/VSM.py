@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .llava.model.language_model.llava_llama import (LlavaLlamaForCausalLM,
+from VisualSearch.model.llava.model.language_model.llava_llama import (LlavaLlamaForCausalLM,
 													 LlavaLlamaModel)
 
 from .segment_anything.modeling import PromptEncoder, MaskDecoder, TwoWayTransformer
@@ -131,7 +131,7 @@ class VSMMetaModel:
 		text_fc_seg = [
 			nn.Linear(in_dim, in_dim),
 			nn.ReLU(inplace=True),
-			nn.Linear(in_dim, out_dim),
+			nn.Linear(in_dim, 256),
 			nn.Dropout(0.0),
 		]
 		self.text_hidden_fcs_seg = nn.ModuleList([nn.Sequential(*text_fc_seg)])
