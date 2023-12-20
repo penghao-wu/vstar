@@ -123,7 +123,7 @@ class VQADataset(torch.utils.data.Dataset):
 
         masks = torch.rand(1, *ori_size)
         label = torch.ones(ori_size) * self.ignore_label
-        bboxes_labels = [torch.tensor([[0.0,0.0,0.0,0.0]])]
+        bboxes_labels = [torch.tensor([[0.5,0.5,1.0,1.0]])]
         bboxes_valid = [0]
         masks_valid = [0]
 
