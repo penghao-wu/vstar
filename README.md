@@ -1,6 +1,6 @@
 # *V*\*: Guided Visual Search as a Core Mechanism in Multimodal LLMs
 
-### [Paper]() | [Project Page]()
+### [Paper]() | [Project Page](https://vstar-seal.github.io/)
 
 
 ![Teaser](assets/teaser.png)
@@ -12,8 +12,9 @@
 3. [Benchmark](#benchmark)
 4. [Evaluation](#evaluation)
 5. [Training](#training)
-6. [Citation](#citation)
-7. [Acknowledgement](#acknowledgement)
+6. [License](#license)
+7. [Citation](#citation)
+8. [Acknowledgement](#acknowledgement)
 
 ## Getting Started <a name="start"></a>
 
@@ -93,6 +94,10 @@ sh finetune.sh
 ```
 
 For the training data preparation and training procedures of our visual search model, please check this [doc](./VisualSearch/training.md).
+
+## License <a name="license"></a>
+
+This project is under the MIT license. See [LICENSE](LICENSE) for details.
 
 ## Citation <a name="citation"></a>
 Please consider citing our paper if you find this project helpful for your research:
