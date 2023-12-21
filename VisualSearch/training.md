@@ -66,5 +66,5 @@ python preprocess_data.py --data_dir DATASET_FOLDER
 ## Launch Training
 To launch training, run
 ```
-python train.py --version PATH_TO_LLAVA_WEIGHT --
+python train.py --version PATH_TO_LLAVA_WEIGHT --dataset_dir DATASET_FOLDER
 ```
