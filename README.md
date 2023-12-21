@@ -24,6 +24,7 @@ conda create -n vstar python=3.10 -y
 conda activate vstar
 pip install -r requirements.txt
 pip install flash-attn --no-build-isolation
+export PYTHONPATH=$PYTHONPATH:path_to_vstar_repo
 ```
 
 ### Pre-trained Model
