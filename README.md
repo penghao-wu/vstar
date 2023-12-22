@@ -1,6 +1,6 @@
 # *V*\*: Guided Visual Search as a Core Mechanism in Multimodal LLMs
 
-### [Paper]() | [Project Page](https://vstar-seal.github.io/)
+### [Paper](https://arxiv.org/abs/2312.14135) | [Project Page](https://vstar-seal.github.io/)
 
 
 ![Teaser](assets/teaser.png)
