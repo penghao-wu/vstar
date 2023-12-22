@@ -104,10 +104,10 @@ This project is under the MIT license. See [LICENSE](LICENSE) for details.
 Please consider citing our paper if you find this project helpful for your research:
 
 ```bibtex
-@article{,
-  title={},
-  author={},
-  journal={},
+@article{vstar,
+  title={V*: Guided Visual Search as a Core Mechanism in Multimodal LLMs},
+  author={Penghao Wu and Saining Xie},
+  journal={arXiv preprint arXiv:2312.14135},
   year={2023}
 }
 ```
