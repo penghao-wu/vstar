@@ -144,6 +144,7 @@ class VSM:
 		kwargs = {}
 		kwargs['torch_dtype'] = torch.bfloat16
 		kwargs['device_map'] = 'cuda'
+		kwargs['is_eval'] = True
 		vsm_tokenizer = AutoTokenizer.from_pretrained(
 				args.version,
 				cache_dir=None,

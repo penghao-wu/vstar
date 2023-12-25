@@ -68,7 +68,7 @@ class VSMMetaModel:
 			self.config.train_mask_decoder = kwargs["train_mask_decoder"]
 			self.config.out_dim = kwargs["out_dim"]
 		else:
-			is_eval = kwargs.get('is_eval', False)
+			is_eval = kwargs.get('is_eval', False)			
 			self.initialize_lisa_modules(self.config, is_eval)
 
 	def initialize_lisa_modules(self, config, is_eval=False):

@@ -39,10 +39,10 @@ def visualize_bbox(img, bbox, class_name, color=BOX_COLOR, thickness=2):
 
 def parse_args_vqallm(args):
 	parser = argparse.ArgumentParser()
-	parser.add_argument("--vqa-model-path", type=str, default="craigwu/visual_search_vqa_aug")
+	parser.add_argument("--vqa-model-path", type=str, default="craigwu/seal_vqa_7b")
 	parser.add_argument("--vqa-model-base", type=str, default=None)
 	parser.add_argument("--conv_type", default="v1", type=str,)
-	parser.add_argument("--vsm-model-path", type=str, default="craigwu/LISA_owlvit_detseg")
+	parser.add_argument("--vsm-model-path", type=str, default="craigwu/seal_vsm_7b")
 	parser.add_argument("--minimum_size_scale", default=4.0, type=float)
 	parser.add_argument("--minimum_size", default=224, type=int)
 	return parser.parse_args(args)
