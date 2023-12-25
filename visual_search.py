@@ -421,7 +421,6 @@ def visual_search_queue(vsm, image, target_object_name, current_patch, search_pa
 	score_max = target_cue_heatmap.max().item()
 	# check whether the target cue is prominent
 	threshold = max(target_cue_threshold_minimum, target_cue_threshold*(target_cue_threshold_decay)**(current_patch_scale_level-1))
-	threshold = 500
 	if score_max > threshold:
 		target_cue_heatmap = normalize_score(target_cue_heatmap)
 		final_heatmap = target_cue_heatmap
