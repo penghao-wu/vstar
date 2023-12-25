@@ -63,8 +63,21 @@ After downloading and organizing data as described above, enter the `VisualSearc
 ```
 python preprocess_data.py --data_dir DATASET_FOLDER
 ```
-## Launch Training
+## Training
 To launch training, run
 ```
 python train.py --version PATH_TO_LLAVA_WEIGHT --dataset_dir DATASET_FOLDER
+```
+
+After training, convert the deepspeed weights to full model weight:
+```
+cd ./runs/vsm/ckpt_model && python zero_to_fp32.py . ../pytorch_model.bin
+```
+
+Merge the weight with the base model under the `VisualSearch` folder:
+```
+CUDA_VISIBLE_DEVICES="" python merge_lora_weights_and_save_hf_model.py \
+  --version="PATH_TO_LLAVA_WEIGHT" \
+  --weight="PATH_TO_pytorch_model.bin" \
+  --save_path="PATH_TO_SAVED_MODEL"
 ```
