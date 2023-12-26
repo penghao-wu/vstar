@@ -14,7 +14,7 @@ deepspeed llava/train/train_mem_search.py \
     --vision_tower openai/clip-vit-large-patch14 \
     --mm_projector_type linear \
     --object_mm_projector_type perceiver \
-    --pretrain_mm_mlp_adapter ./checkpoints/llava-$MODEL_VERSION-linear-pretrain \
+    --pretrain_mm_mlp_adapter ./checkpoints/llava-$MODEL_VERSION-linear-pretrain/mm_projector.bin \
     --pretrain_mm_perceiver_adapter ./checkpoints/llava-$MODEL_VERSION-resampler-pretrain/mm_projector.bin \
     --mm_vision_select_layer -2 \
     --mm_use_im_start_end False \
