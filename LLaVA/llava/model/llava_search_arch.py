@@ -15,8 +15,7 @@ class LlavaSearchMetaModel:
         if hasattr(config, "mm_vision_tower"):
             self.vision_tower = build_vision_tower(config, delay_load=True)
             self.mm_projector = build_vision_projector(config)
-            config.mm_projector_type = getattr(config, 'object_mm_projector_type', 'perceiver')
-            self.mm_projector_object = build_vision_projector(config)
+            self.mm_projector_object = build_vision_projector(config, object_projector=True)
             
     def get_vision_tower(self):
         vision_tower = getattr(self, 'vision_tower', None)
@@ -56,8 +55,7 @@ class LlavaSearchMetaModel:
 
         if getattr(self, 'mm_projector', None) is None:
             self.mm_projector = build_vision_projector(self.config)
-            self.config.mm_projector_type = self.config.object_mm_projector_type
-            self.mm_projector_object = build_vision_projector(self.config)
+            self.mm_projector_object = build_vision_projector(self.config, object_projector=True)
 
 
         if pretrain_mm_mlp_adapter is not None:
