@@ -671,6 +671,7 @@ class LazySupervisedDataset(Dataset):
 		negative_data = json.load(open(os.path.join(data_path, 'negative_data.json'), "r"))
 		llava_focus_40k = json.load(open(os.path.join(data_path, 'llava_focus_data.json'), "r"))
 		spatial = json.load(open(os.path.join(data_path, 'spatial_relation_data.json'), "r"))
+		spatial = spatial + copy.deepcopy(spatial)
 		list_data_dict =  vaw_search_data + llava_data + GQA_search_data + llava_focus_40k + spatial + negative_data 
 
 		rank0_print("Formatting inputs...Skip in lazy mode")
