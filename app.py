@@ -118,12 +118,12 @@ This is the demo of our SEAL framework with V* visual search mechanism. \n
 
 article = """
 <p style='text-align: center'>
-<a href='' target='_blank'>
+<a href='https://arxiv.org/abs/2312.14135' target='_blank'>
 Preprint Paper
 </a>
 \n
 <p style='text-align: center'>
-<a href='' target='_blank'>   Github </a></p>
+<a href='https://github.com/penghao-wu/vstar' target='_blank'>   Github </a></p>
 """
 
 
