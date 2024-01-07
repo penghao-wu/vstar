@@ -1,6 +1,6 @@
 # *V*\*: Guided Visual Search as a Core Mechanism in Multimodal LLMs
 
-### [Paper](https://arxiv.org/abs/2312.14135) | [Project Page](https://vstar-seal.github.io/)
+### [Paper](https://arxiv.org/abs/2312.14135) | [Project Page](https://vstar-seal.github.io/) | [Online Demo](https://huggingface.co/spaces/craigwu/vstar)
 
 
 ![Teaser](assets/teaser.png)
@@ -79,6 +79,7 @@ To evaluate our visual search mechanism on the annotated targets from the *V*\*B
 ```
 python visual_search.py --benchmark-folder PATH_TO_BENCHMARK_FOLDER
 ```
+The detailed evaluation results of our model can be found [here](https://drive.google.com/file/d/1jl4jStTmizVXrKi2ogvOmFB8Zuj0ffj6/view?usp=sharing).  
 
 ## Training <a name="training"></a>
 
